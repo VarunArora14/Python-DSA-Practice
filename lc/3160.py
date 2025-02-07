@@ -4,34 +4,33 @@ from collections import defaultdict
 
 class Solution:
     def queryResults(self, limit: int, queries: List[List[int]]) -> List[int]:
-        number_color_mapper = dict()
-        color_number_mapper = defaultdict(set)
+        ball_number_to_color_mapping = dict()
+        color_to_number_mapping = defaultdict(set)
         query_results = []
+        distinct_colors = 0
 
-        for [x, y] in queries:
-            if y not in color_number_mapper:
-                color_number_mapper[y] = set()
+        for ball_number, new_color in queries:
+            if ball_number in ball_number_to_color_mapping:
+                old_color = ball_number_to_color_mapping[ball_number]
+                color_to_number_mapping[old_color] -= 1
+                if color_to_number_mapping[old_color] == 0:
+                    del color_to_number_mapping[old_color]  # imp
+                    distinct_colors -= 1
 
-            if x not in number_color_mapper:
-                # element occurs first time
-                number_color_mapper[x] = y
-                color_number_mapper[y].add(x)
+            ball_number_to_color_mapping[ball_number] = new_color
+            if new_color in color_to_number_mapping:
+                color_to_number_mapping[new_color]
             else:
-                # number exists with some color but mapping to color might change
-                if number_color_mapper[x] != y:
-                    # not the existing color
-                    existing_color = number_color_mapper[x]
-                    number_color_mapper[x] = y
-                    color_number_mapper[existing_color].remove(x)
-                    if color_number_mapper[existing_color] == set():
-                        del color_number_mapper[existing_color]
-                    color_number_mapper[y].add(x)
-            query_results.append(len(color_number_mapper.keys()))
+                distinct_colors += 1
+                color_to_number_mapping[new_color] = 1
+
+            query_results.append(distinct_colors)
         return query_results
 
 
 limit = 4
 queries = [[0, 1], [1, 2], [2, 2], [3, 4], [4, 5]]
+# queries = [[1, 4], [2, 5], [1, 3], [3, 4]]
 s = Solution()
 print(s.queryResults(queries=queries, limit=limit))
 
