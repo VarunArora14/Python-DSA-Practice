@@ -87,5 +87,5 @@ Once we find the bob path, then for alice we go BFS as we have to maximize the v
 for non visited we check if for that node, bob has crossed it at that time or before then add income accordingly.
 
 For each bfs path of alice, we pass the income as well and we check leaf node condition that len(graph) == 1 then leaf node has come and then we do 
-max_val = max(max_val, income) and return ans accordingly.
+max_val = max(max_val, income) and return ans accordingly. 
 """
