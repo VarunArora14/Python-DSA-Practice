@@ -1,23 +1,23 @@
-nums = [10,9,2,5,3,7,101,18]
+from typing import List
 
-def Solution(nums:list[int]):
-    n = len(nums)
-    sequence_store = [1 for _ in range(n)]
-    sequence_store[n-1]=1
-    
-    for i in range(n-1, -1, -1):
-        maxSubsequence = 1
-        for j in range(i, n):
-            if nums[i] < nums[j]:
-                maxSubsequence = max(maxSubsequence, 1 + sequence_store[j]) # max of current and jth element + subsequence for [i...n]
-        sequence_store[i] = maxSubsequence
-    
-    print(sequence_store)
-    
-    res = 0
-    for s in sequence_store:
-        res = max(res, s)
-    
-    return res
 
-Solution(nums=nums)
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        lis_lengths = [1 for _ in range(len(nums) + 1)]
+        for i in range(len(nums)):
+            for j in range(i):
+                if nums[j] < nums[i]:
+                    lis_lengths[i] = max(
+                        lis_lengths[i], 1 + lis_lengths[j]
+                    )  # on finding a smaller number before nums[i], we maximise the LIS till there to later use as solution of subproblem nums[i]
+
+        print(lis_lengths)
+        return max(lis_lengths)
+
+
+s = Solution()
+nums = [10, 9, 2, 5, 3, 7, 101, 18]
+print(s.lengthOfLIS(nums))
+"""
+For finding the longest increasing subsequence till nums[i], we need to compute the LIS from [0..i-1]
+"""
