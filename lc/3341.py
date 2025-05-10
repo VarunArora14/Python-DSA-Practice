@@ -8,7 +8,8 @@ class Solution:
         # we can go in any direction so BFS can work with visited set for cycle avoid
 
         q = []
-        heapq.heappush(q, (0, 0, 0))
+        isOne = True
+        heapq.heappush(q, (0, 0, 0, isOne))
 
         vis = set()
         vis.add((0, 0))
@@ -16,7 +17,7 @@ class Solution:
 
         dirs = [(0, 1), (1, 0), (-1, 0), (0, -1)]
         while len(q):
-            curr_time, x, y = heapq.heappop(q)
+            curr_time, x, y, isOne = heapq.heappop(q)
             # print(curr_time, x, y)
 
             if x == len(moveTime) - 1 and y == len(moveTime[0]) - 1:
@@ -28,8 +29,9 @@ class Solution:
                     continue
                 else:
                     # consider the current time and add set time = max(curr_time, nums[x][y]) + 1
-                    new_time = max(curr_time, moveTime[nx][ny]) + 1
-                    heapq.heappush(q, (new_time, nx, ny))
+                    new_time = max(curr_time, moveTime[nx][ny]) + (1 if isOne else 2)
+                    newIsOne = not isOne
+                    heapq.heappush(q, (new_time, nx, ny, newIsOne))
                     vis.add((nx, ny))
 
                     # if nx == len(moveTime) - 1 and ny == len(moveTime) - 1:
@@ -39,5 +41,5 @@ class Solution:
 
 
 sol = Solution()
-nums = [[0, 0, 0], [0, 0, 0]]
+nums = [[0, 58], [27, 69]]
 print(sol.minTimeToReach(moveTime=nums))
