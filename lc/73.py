@@ -17,7 +17,7 @@ class Solution:
                 if rows[i] or cols[j]:
                     matrix[i][j] = 0
 
-        print(matrix)
+        # print(matrix)
 
 
 sol = Solution()
