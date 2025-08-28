@@ -14,7 +14,7 @@ class Solution:
     def minimumPairRemoval(self, nums: List[int]) -> int:
         n = len(nums)
         if n == 1:
-            return nums
+            return nums[0]
 
         ops = 0
         while not self.check_non_decreasing(nums):
