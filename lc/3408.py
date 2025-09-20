@@ -4,31 +4,40 @@ import heapq
 class TaskManager(object):
     def __init__(self, tasks):
         self.heap = []
-        self.taskPriority = {}
-        self.taskOwner = {}
-        for t in tasks:
-            self.add(t[0], t[1], t[2])
+        self.task_to_priority = {}
+        self.task_to_userId = {}
+        for [u, t, p] in tasks:
+            self.add(u, t, p)
 
     def add(self, userId, taskId, priority):
         heapq.heappush(self.heap, (-priority, -taskId))
-        self.taskPriority[taskId] = priority
-        self.taskOwner[taskId] = userId
+        self.task_to_priority[taskId] = priority
+        self.task_to_userId[taskId] = userId
 
     def edit(self, taskId, newPriority):
-        heapq.heappush(self.heap, (-newPriority, -taskId))
-        self.taskPriority[taskId] = newPriority
+        self.task_to_priority[taskId] = newPriority
+        heapq.heappush(self.heap, (-newPriority, -taskId))  # add new element
 
     def rmv(self, taskId):
-        self.taskPriority[taskId] = -1
+        self.task_to_priority[taskId] = -1  # soft delete
+        self.task_to_userId[taskId] = -1
 
     def execTop(self):
+        # loop run untils the task -> priority does not have same priority as per heap negative val
+        # since we change the priority in edit and added element, it will return userId only when
+        # same priority in heap for a taskId as per map
         while self.heap:
-            negp, negid = heapq.heappop(self.heap)
-            p = -negp
-            tid = -negid
-            if self.taskPriority.get(tid, -2) == p:
-                self.taskPriority[tid] = -1
-                return self.taskOwner.get(tid, -1)
+            (negative_priority, negative_taskId) = heapq.heappop(self.heap)
+            priority = -negative_priority
+            taskId = -negative_taskId
+
+            if self.task_to_priority[taskId] == priority:
+                # execute the task
+                self.task_to_priority[taskId] = -1
+
+                # return userId for this task
+                return self.task_to_userId[taskId]
+
         return -1
 
 
